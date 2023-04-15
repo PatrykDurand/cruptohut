@@ -1,1 +1,4 @@
-console.log("Hello World!");
+import { startServer } from './server'
+import { config } from './config'
+
+startServer(config.server)
