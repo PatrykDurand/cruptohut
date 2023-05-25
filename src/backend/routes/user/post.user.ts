@@ -8,13 +8,21 @@ import { handleRequest } from '../../utils/request.utils'
 import { createHash } from '../../utils/hash.utils'
 import { authorize } from '../../utils/middleware.utils'
 const SALT = (process.env.PASSWORD_SALT as string) ?? 'XYZ'
+
 export default {
     method: 'post',
     path: '/api/user',
     validators: [
         authorize,
+        body('login').not().isEmpty(),
         body('email').isEmail(),
         body('password').not().isEmpty(),
+        body('name').not().isEmpty(),
+        body('surname').not().isEmpty(),
+        body('address').not().isEmpty(),
+        body('birthDate').not().isEmpty(),
+        body('idCardNumber').not().isEmpty(),
+
     ],
     handler: async (req: Request, res: Response) =>
         handleRequest({
@@ -23,14 +31,20 @@ export default {
             responseSuccessStatus: StatusCodes.CREATED,
             messages: { uniqueConstraintFailed: 'Email must be unique.' },
             execute: async () => {
-                const { email, name, password } = req.body
+                const { login, email, password, name, surname, address, birthDate, idCardNumber} = req.body
                 const passwordHash = createHash(password, SALT)
+                const formattedDate = new Date(birthDate).toISOString()
                 return await prisma.user.create({
                     data: {
-                        id: v4(),
-                        name,
+                        userId: v4(),
+                        login,
                         email,
                         password: passwordHash,
+                        name,
+                        surname,
+                        address,
+                        birthDate: formattedDate,
+                        idCardNumber,
                     },
                 })
             },

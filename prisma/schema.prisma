@@ -19,19 +19,21 @@ model User {
     surname       String
     address       String
     birthDate     DateTime
-    idCardNumber  Int
+    idCardNumber  String   @unique
+    isVerified    Boolean  @default(false)
+
 
     accounts Account[]
     recipients   Recipient[]
 }
 
 model Account {
-  accountId     Int @id
+  accountId     Int @id @default(autoincrement())
   userID        String
-  accountNumber Int
-  balance       Decimal
+  accountNumber String  @unique
+  balance       Decimal @default(0)
   accountType   String
-  status        String
+  accountStatus String  @default("Active")
 
   user User @relation(fields: [userID], references:[userId])
 
