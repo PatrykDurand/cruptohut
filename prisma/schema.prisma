@@ -11,78 +11,77 @@ datasource db {
 }
 
 model User {
-    userId        String  @id
-    login         String  @unique
-    email         String  @unique
-    password      String
-    name          String
-    surname       String
-    address       String
-    birthDate     DateTime
-    idCardNumber  String   @unique
-    isVerified    Boolean  @default(false)
+  userId       Int      @id @default(autoincrement())
+  login        String   @unique
+  email        String   @unique
+  password     String
+  name         String
+  surname      String
+  address      String
+  birthDate    DateTime
+  idCardNumber String   @unique
+  isVerified   Boolean  @default(false)
 
-
-    accounts Account[]
-    recipients   Recipient[]
+  accounts   Account[]
+  recipients Recipient[]
 }
 
 model Account {
-  accountId     Int @id @default(autoincrement())
-  userID        String
+  accountId     Int     @id @default(autoincrement())
+  userID        Int
   accountNumber String  @unique
   balance       Decimal @default(0)
   accountType   String
   accountStatus String  @default("Active")
 
-  user User @relation(fields: [userID], references:[userId])
+  user User @relation(fields: [userID], references: [userId])
 
+  sentTransactions     Transaction[] @relation("SenderAccount")
+  receivedTransactions Transaction[] @relation("RecipientAccount")
 }
 
 model Transaction {
-    transactionID       Int      @id @default(autoincrement())
-    senderaccountid     Int
-    recipientaccountnumber String
-    recipientaccountid  Int?
-    amount              Float
-    date                DateTime
-    title               String
+  transactionID          Int      @id @default(autoincrement())
+  senderAccountId        Int
+  recipientAccountNumber String
+  amount                 Decimal
+  date                   DateTime
+  title                  String
 
-    senderAccount       Account  @relation("TransactionSenderAccount", fields: [senderaccountid], references: [accountID])
-    recipientAccount    Account? @relation("TransactionRecipientAccount", fields: [recipientaccountid], references: [accountID])
+  senderAccount    Account  @relation("SenderAccount", fields: [senderAccountId], references: [accountId])
+  recipientAccount Account? @relation("RecipientAccount", fields: [recipientAccountNumber], references: [accountNumber])
 }
 
 model Session {
-    sessionID   Int      @id @default(autoincrement())
-    time        DateTime
-    status      String
-
-    employee    Employee @relation(fields: [employeeID], references: [employeeID])
+  sessionID Int      @id @default(autoincrement())
+  time      DateTime
+  status    String
 }
 
 model Role {
-    roleID      Int      @id @default(autoincrement())
-    employeeID  Int
-    name        String
+  roleID     Int    @id @default(autoincrement())
+  employeeID Int
+  name       String
 
-    employee    Employee @relation(fields: [employeeID], references: [employeeID])
+  employee BankAdmin @relation(fields: [employeeID], references: [employeeId])
 }
 
 model BankAdmin {
-  employeeId    String  @id
-  email         String  @unique
-  password      String
-  name          String
-  surname       String
-
+  employeeId Int    @id @default(autoincrement())
+  email      String @unique
+  password   String
+  name       String
+  surname    String
+  roles      Role[]
 }
 
 model Recipient {
-  userID        String  @id
+  recipientId   Int     @id @default(autoincrement())
+  userID        Int
   name          String
   surname       String
-  accountNumber Int
-  trusted       Boolean
+  accountNumber String
+  trusted       Boolean @default(true)
 
-  user          User    @relation(fields: [userID], references: [userId])
+  user User @relation(fields: [userID], references: [userId])
 }

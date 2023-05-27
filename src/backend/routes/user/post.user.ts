@@ -36,7 +36,6 @@ export default {
                 const formattedDate = new Date(birthDate).toISOString()
                 return await prisma.user.create({
                     data: {
-                        userId: v4(),
                         login,
                         email,
                         password: passwordHash,
