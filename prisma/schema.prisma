@@ -39,6 +39,35 @@ model Account {
 
 }
 
+model Transaction {
+    transactionID       Int      @id @default(autoincrement())
+    senderaccountid     Int
+    recipientaccountnumber String
+    recipientaccountid  Int?
+    amount              Float
+    date                DateTime
+    title               String
+
+    senderAccount       Account  @relation("TransactionSenderAccount", fields: [senderaccountid], references: [accountID])
+    recipientAccount    Account? @relation("TransactionRecipientAccount", fields: [recipientaccountid], references: [accountID])
+}
+
+model Session {
+    sessionID   Int      @id @default(autoincrement())
+    time        DateTime
+    status      String
+
+    employee    Employee @relation(fields: [employeeID], references: [employeeID])
+}
+
+model Role {
+    roleID      Int      @id @default(autoincrement())
+    employeeID  Int
+    name        String
+
+    employee    Employee @relation(fields: [employeeID], references: [employeeID])
+}
+
 model BankAdmin {
   employeeId    String  @id
   email         String  @unique
