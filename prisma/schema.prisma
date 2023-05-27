@@ -11,8 +11,49 @@ datasource db {
 }
 
 model User {
-    id          String  @id
-    email       String  @unique
-    name        String?
-    password    String
+    userId        String  @id
+    login         String  @unique
+    email         String  @unique
+    password      String
+    name          String
+    surname       String
+    address       String
+    birthDate     DateTime
+    idCardNumber  String   @unique
+    isVerified    Boolean  @default(false)
+
+
+    accounts Account[]
+    recipients   Recipient[]
+}
+
+model Account {
+  accountId     Int @id @default(autoincrement())
+  userID        String
+  accountNumber String  @unique
+  balance       Decimal @default(0)
+  accountType   String
+  accountStatus String  @default("Active")
+
+  user User @relation(fields: [userID], references:[userId])
+
+}
+
+model BankAdmin {
+  employeeId    String  @id
+  email         String  @unique
+  password      String
+  name          String
+  surname       String
+
+}
+
+model Recipient {
+  userID        String  @id
+  name          String
+  surname       String
+  accountNumber Int
+  trusted       Boolean
+
+  user          User    @relation(fields: [userID], references: [userId])
 }
