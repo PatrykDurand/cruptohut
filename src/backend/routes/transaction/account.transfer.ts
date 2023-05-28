@@ -70,7 +70,7 @@ export default {
                         recipientAccountNumber: recipientAccountNumber,
                         amount: amount,
                         date: new Date(),
-                        title: 'Money transfer',
+                        title: `Money transfer from ${senderAccount.accountNumber} to ${recipientAccount.accountNumber}`,
                     },
                 })
 
