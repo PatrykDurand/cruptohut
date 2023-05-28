@@ -6,7 +6,8 @@ import verifyUser from './admin/verify.user'
 import toggleAccountStatus from './admin/block-unblock-account'
 import accountBalance from './user/account.balance'
 import addRecipient from './user/add.recipient'
-
+import viewRecipient from "./user/view.recipient";
+import deleteRecipient from "./user/delete.recipient";
 const router = express.Router()
 
 // home page route
@@ -23,6 +24,8 @@ const apiRoutes = [
     toggleAccountStatus,
     accountBalance,
     addRecipient,
+    viewRecipient,
+    deleteRecipient
 ]
 
 apiRoutes.forEach((route) =>
