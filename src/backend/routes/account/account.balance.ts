@@ -9,8 +9,8 @@ import {body} from 'express-validator'
 
 
 export default {
-    method: 'post',
-    path: '/api/admin/toggleaccountstatus',
+    method: 'get',
+    path: '/api/account/balance',
     validators: [
         authorize,
         body('accountNumber').not().isEmpty(),
@@ -20,7 +20,7 @@ export default {
             req,
             res,
             responseSuccessStatus: StatusCodes.CREATED,
-            messages: { uniqueConstraintFailed: 'User not found' },
+            messages: { },
             execute: async () => {
 
                 const { accountNumber } = req.body
@@ -32,14 +32,7 @@ export default {
                     throw new Error('Account not found')
                 }
 
-                return await prisma.account.update({
-
-                    where: {accountId: account.accountId},
-                    data:{
-                        accountStatus: account.accountStatus === 'Active' ? 'Blocked' : 'Active',
-                    }
-
-                })
+                return { balance: account.balance }
 
 
             },

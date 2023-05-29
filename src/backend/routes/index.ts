@@ -5,6 +5,8 @@ import loginUser from './user/login.user'
 import verifyUser from './admin/verify.user'
 import accountTransfer from './transaction/account.transfer'
 import toggleAccountStatus from './admin/block-unblock-account'
+import editUser from './user/edit.user'
+import accountBalance from './account/account.balance'
 
 const router = express.Router()
 
@@ -21,7 +23,8 @@ const apiRoutes = [
     verifyUser,
     accountTransfer,
     toggleAccountStatus,
-
+    editUser,
+    accountBalance
 ]
 
 apiRoutes.forEach((route) =>
