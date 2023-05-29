@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
 import { TRoute } from '../../routes/types'
-import { handleRequest } from '../../utils/request.utils'
+import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
 
@@ -23,7 +23,11 @@ export default {
                 })
 
                 if (!account) {
-                    throw new Error('Account not found')
+                    throw {
+                        status: StatusCodes.BAD_REQUEST,
+                        message: 'Account not found',
+                        isCustomError: true,
+                    } as TCustomError
                 }
 
                 const transactions = await prisma.transaction.findMany({
