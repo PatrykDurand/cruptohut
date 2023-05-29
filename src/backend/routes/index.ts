@@ -12,6 +12,8 @@ import viewRecipient from './user/view.recipient'
 import addRecipient from './user/add.recipient'
 import editUser from './user/edit.user'
 import accountBalance from './account/account.balance'
+import loginAdmin from './admin/login.admin'
+import { log } from 'util'
 import accountBalanceConvertCurrency from './account/account.balance.convertCurrency'
 
 const router = express.Router()
@@ -36,6 +38,7 @@ const apiRoutes = [
     editUser,
     accountBalance,
     accountDeposit,
+    loginAdmin,
     accountBalanceConvertCurrency,
 ]
 
