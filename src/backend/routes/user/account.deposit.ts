@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
 import { TRoute } from '../../routes/types'
-import { handleRequest } from '../../utils/request.utils'
+import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
 
@@ -35,7 +35,11 @@ export default {
                 })
 
                 if (!userAccount) {
-                    throw new Error('Account not found')
+                    throw {
+                        status: StatusCodes.NOT_FOUND,
+                        message: 'Account not found',
+                        isCustomError: true,
+                    } as TCustomError
                 }
 
                 await prisma.account.update({
@@ -57,9 +61,9 @@ export default {
                     },
                 })
 
-                res.status(StatusCodes.OK).json({
+                return {
                     message: 'Transfer successful',
-                })
+                }
             },
         }),
 } as TRoute
