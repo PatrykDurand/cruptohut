@@ -5,6 +5,8 @@ import loginUser from './user/login.user'
 import verifyUser from './admin/verify.user'
 import toggleAccountStatus from './admin/block-unblock-account'
 import editUser from './user/edit.user'
+import accountBalance from './account/account.balance'
+
 const router = express.Router()
 
 // home page route
@@ -13,7 +15,7 @@ router.get('/', (req, res) => {
 })
 
 // api routes
-const apiRoutes = [getStatus, postUser, loginUser, verifyUser, toggleAccountStatus, editUser]
+const apiRoutes = [getStatus, postUser, loginUser, verifyUser, toggleAccountStatus, editUser, accountBalance]
 
 apiRoutes.forEach((route) =>
     router[route.method](route.path, route.validators, route.handler),
