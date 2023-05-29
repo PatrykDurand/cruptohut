@@ -14,7 +14,6 @@ export default {
     path: '/api/user',
     validators: [
         authorize,
-        body('login').not().isEmpty(),
         body('email').isEmail(),
         body('password').not().isEmpty(),
         body('name').not().isEmpty(),
@@ -22,7 +21,6 @@ export default {
         body('address').not().isEmpty(),
         body('birthDate').not().isEmpty(),
         body('idCardNumber').not().isEmpty(),
-
     ],
     handler: async (req: Request, res: Response) =>
         handleRequest({
@@ -31,12 +29,19 @@ export default {
             responseSuccessStatus: StatusCodes.CREATED,
             messages: { uniqueConstraintFailed: 'Email must be unique.' },
             execute: async () => {
-                const { login, email, password, name, surname, address, birthDate, idCardNumber} = req.body
+                const {
+                    email,
+                    password,
+                    name,
+                    surname,
+                    address,
+                    birthDate,
+                    idCardNumber,
+                } = req.body
                 const passwordHash = createHash(password, SALT)
                 const formattedDate = new Date(birthDate).toISOString()
                 return await prisma.user.create({
                     data: {
-                        login,
                         email,
                         password: passwordHash,
                         name,
