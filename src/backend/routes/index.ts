@@ -12,6 +12,7 @@ import viewRecipient from './user/view.recipient'
 import addRecipient from './user/add.recipient'
 import editUser from './user/edit.user'
 import accountBalance from './account/account.balance'
+import accountBalanceConvertCurrency from './account/account.balance.convertCurrency'
 
 const router = express.Router()
 
@@ -34,7 +35,8 @@ const apiRoutes = [
     toggleAccountStatus,
     editUser,
     accountBalance,
-    accountDeposit
+    accountDeposit,
+    accountBalanceConvertCurrency,
 ]
 
 apiRoutes.forEach((route) =>
