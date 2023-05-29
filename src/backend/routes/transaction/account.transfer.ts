@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { StatusCodes } from 'http-status-codes'
+import { ReasonPhrases, StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
 import { TRoute } from '../../routes/types'
-import { handleRequest } from '../../utils/request.utils'
+import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
 
@@ -29,10 +29,18 @@ export default {
                     where: { accountNumber: senderAccountNumber },
                 })
                 if (!senderAccount) {
-                    throw new Error('Account not found')
+                    throw {
+                        status: StatusCodes.BAD_REQUEST,
+                        message: 'Account not found',
+                        isCustomError: true,
+                    } as TCustomError
                 }
                 if (senderAccount.accountStatus !== 'Active') {
-                    throw new Error('Account is not active')
+                    throw {
+                        status: StatusCodes.BAD_REQUEST,
+                        message: 'Account is not active',
+                        isCustomError: true,
+                    } as TCustomError
                 }
 
                 // Find recipient's account
@@ -40,15 +48,27 @@ export default {
                     where: { accountNumber: recipientAccountNumber },
                 })
                 if (!recipientAccount) {
-                    throw new Error('Account not found')
+                    throw {
+                        status: StatusCodes.BAD_REQUEST,
+                        message: 'Account not found',
+                        isCustomError: true,
+                    } as TCustomError
                 }
                 if (recipientAccount.accountStatus !== 'Active') {
-                    throw new Error('Account is not active')
+                    throw {
+                        status: StatusCodes.BAD_REQUEST,
+                        message: 'Account is not active',
+                        isCustomError: true,
+                    } as TCustomError
                 }
 
                 // Check if sender has sufficient funds
                 if (senderAccount.balance < amount) {
-                    throw new Error('Insufficient funds')
+                    throw {
+                        status: StatusCodes.BAD_REQUEST,
+                        message: 'Insufficient funds',
+                        isCustomError: true,
+                    } as TCustomError
                 }
 
                 // Update account balances
@@ -74,9 +94,9 @@ export default {
                     },
                 })
 
-                res.status(StatusCodes.OK).json({
+                return {
                     message: 'Transfer successful',
-                })
+                }
             },
         })
     },
