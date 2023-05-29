@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
 import { TRoute } from '../../routes/types'
-import { handleRequest } from '../../utils/request.utils'
+import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
 
@@ -17,29 +17,50 @@ export default {
         body('accountNumber').not().isEmpty(),
     ],
     handler: async (req: Request, res: Response): Promise<void> => {
-        const { userId, name, surname, accountNumber } = req.body
+        await handleRequest({
+            req,
+            res,
+            responseSuccessStatus: StatusCodes.OK,
+            responseFailStatus: StatusCodes.UNAUTHORIZED,
+            execute: async () => {
+                const { userId, name, surname, accountNumber } = req.body
 
-        const user = await prisma.user.findUnique({
-            where: { userId },
-        })
+                const user = await prisma.user.findUnique({
+                    where: { userId },
+                    include: { recipients: true },
+                })
 
-        if (!user) {
-            res.status(StatusCodes.NOT_FOUND).json({ error: 'User not found' })
-            return
-        }
+                if (!user) {
+                    res.status(StatusCodes.NOT_FOUND).json({
+                        error: 'User not found',
+                    })
+                    return
+                }
 
-        const recipient = await prisma.recipient.create({
-            data: {
-                name,
-                surname,
-                accountNumber,
-                trusted: true,
-                user: {
-                    connect: { userId },
-                },
+                const recipient = await prisma.recipient.create({
+                    data: {
+                        name,
+                        surname,
+                        accountNumber,
+                        trusted: true,
+                        user: {
+                            connect: { userId },
+                        },
+                    },
+                })
+
+                if (!user) {
+                    throw {
+                        status: StatusCodes.NOT_FOUND,
+                        message: 'User not found',
+                        isCustomError: true,
+                    } as TCustomError
+                }
+
+                return {
+                    message: user.recipients,
+                }
             },
         })
-
-        res.status(StatusCodes.CREATED).json(recipient)
     },
 } as TRoute
