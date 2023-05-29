@@ -6,6 +6,7 @@ import verifyUser from './admin/verify.user'
 import accountTransfer from './transaction/account.transfer'
 import accountHistory from './transaction/account.history'
 import toggleAccountStatus from './admin/block-unblock-account'
+import accountDeposit from './user/account.deposit'
 import deleteRecipient from './user/delete.recipient'
 import viewRecipient from './user/view.recipient'
 import addRecipient from './user/add.recipient'
@@ -32,7 +33,8 @@ const apiRoutes = [
     accountHistory,
     toggleAccountStatus,
     editUser,
-    accountBalance
+    accountBalance,
+    accountDeposit
 ]
 
 apiRoutes.forEach((route) =>
