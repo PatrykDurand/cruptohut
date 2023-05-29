@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import {ReasonPhrases, StatusCodes} from 'http-status-codes'
+import { ReasonPhrases, StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
 import { TRoute } from '../../routes/types'
-import {handleRequest, TCustomError} from '../../utils/request.utils'
+import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
 
