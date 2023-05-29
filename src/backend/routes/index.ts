@@ -6,6 +6,7 @@ import verifyUser from './admin/verify.user'
 import accountTransfer from './transaction/account.transfer'
 import accountHistory from './transaction/account.history'
 import toggleAccountStatus from './admin/block-unblock-account'
+import viewRecipient from './user/view.recipient'
 import addRecipient from './user/add.recipient'
 import editUser from './user/edit.user'
 import accountBalance from './account/account.balance'
@@ -23,6 +24,7 @@ const apiRoutes = [
     postUser,
     loginUser,
     verifyUser,
+    viewRecipient,
     addRecipient,
     accountTransfer,
     accountHistory,
