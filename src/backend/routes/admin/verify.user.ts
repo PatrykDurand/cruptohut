@@ -4,7 +4,7 @@ import { prisma } from '../../database'
 import { TRoute } from '../../routes/types'
 import { handleRequest } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
-import {body} from "express-validator";
+import {body} from 'express-validator'
 
 function generateAccountNumber() {
     return Math.floor(100000000 + Math.random() * 900000000).toString()
@@ -43,7 +43,7 @@ export default {
                             connect: { userId }
                         }
                     },
-                });
+                })
 
                 return await prisma.user.update({
 

@@ -3,8 +3,15 @@ import getStatus from './status/get.status'
 import postUser from './user/post.user'
 import loginUser from './user/login.user'
 import verifyUser from './admin/verify.user'
+import accountTransfer from './transaction/account.transfer'
+import accountHistory from './transaction/account.history'
 import toggleAccountStatus from './admin/block-unblock-account'
 import accountDeposit from './user/account.deposit'
+import deleteRecipient from './user/delete.recipient'
+import viewRecipient from './user/view.recipient'
+import addRecipient from './user/add.recipient'
+import editUser from './user/edit.user'
+import accountBalance from './account/account.balance'
 
 const router = express.Router()
 
@@ -14,7 +21,21 @@ router.get('/', (req, res) => {
 })
 
 // api routes
-const apiRoutes = [getStatus, postUser, loginUser, verifyUser, toggleAccountStatus, accountDeposit]
+const apiRoutes = [
+    getStatus,
+    postUser,
+    loginUser,
+    verifyUser,
+    deleteRecipient,
+    viewRecipient,
+    addRecipient,
+    accountTransfer,
+    accountHistory,
+    toggleAccountStatus,
+    editUser,
+    accountBalance,
+    accountDeposit
+]
 
 apiRoutes.forEach((route) =>
     router[route.method](route.path, route.validators, route.handler),
