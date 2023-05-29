@@ -71,6 +71,25 @@ export default {
                     } as TCustomError
                 }
 
+                // Check if the latest session record is Active or Blocked
+                const latestSession = await prisma.session.findFirst({
+                    orderBy: { time: 'desc' },
+                })
+                if (!latestSession) {
+                    throw {
+                        status: StatusCodes.UNAUTHORIZED,
+                        message: 'Session not found',
+                        isCustomError: true,
+                    } as TCustomError
+                }
+                if (latestSession.status === 'Blocked') {
+                    throw {
+                        status: StatusCodes.FORBIDDEN,
+                        message: 'Session is blocked',
+                        isCustomError: true,
+                    } as TCustomError
+                }
+
                 // Update account balances
                 await prisma.account.update({
                     where: { accountId: senderAccount.accountId },
