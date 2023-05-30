@@ -55,7 +55,7 @@ export default {
 
                 await prisma.transaction.create({
                     data: {
-                        senderAccountId: 1,
+                        senderAccountId: userAccount.accountId,
                         recipientAccountNumber: accountNumber,
                         amount: amount,
                         date: new Date(),

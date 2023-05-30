@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
-import { TRoute } from '../../routes/types'
+import { TRoute } from '../types'
 import { handleRequest } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'

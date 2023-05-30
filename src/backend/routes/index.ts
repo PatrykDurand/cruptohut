@@ -15,8 +15,9 @@ import addRecipient from './user/add.recipient'
 import editUser from './user/edit.user'
 import accountBalance from './account/account.balance'
 import loginAdmin from './admin/login.admin'
-import { log } from 'util'
 import accountBalanceConvertCurrency from './account/account.balance.convertCurrency'
+import blockUnblockSession from './admin/block-unblock-session'
+import blockUnblockAccount from './admin/block-unblock-account'
 
 const router = express.Router()
 
@@ -44,6 +45,8 @@ const apiRoutes = [
     accountDeposit,
     loginAdmin,
     accountBalanceConvertCurrency,
+    blockUnblockAccount,
+    blockUnblockSession,
 ]
 
 apiRoutes.forEach((route) =>

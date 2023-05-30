@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
-import { TRoute } from '../../routes/types'
+import { TRoute } from '../types'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
@@ -39,7 +39,7 @@ export default {
                     return
                 }
 
-                const recipient = await prisma.recipient.create({
+                await prisma.recipient.create({
                     data: {
                         name,
                         surname,

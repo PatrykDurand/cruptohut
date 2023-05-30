@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
-import { TRoute } from '../../routes/types'
+import { TRoute } from '../types'
 import { authorize } from '../../utils/middleware.utils'
 import { body, validationResult } from 'express-validator'
 import { getCurrencyRate } from '../../utils/nbp.utils'
@@ -26,7 +26,6 @@ export default {
             const { accountNumber, currencyCode } = req.body
             const { ...userSession } = getUser()
             const userId = userSession.userId
-            // Find sender's account
             const account = await prisma.account.findFirst({
                 where: {
                     AND: [{ userID: userId }, { accountNumber: accountNumber }],
