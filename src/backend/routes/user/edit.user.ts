@@ -5,6 +5,7 @@ import { TRoute } from '../../routes/types'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
+import { getUser } from '../../utils/session.utils'
 
 export default {
     method: 'patch',
@@ -34,7 +35,9 @@ export default {
             responseSuccessStatus: StatusCodes.OK,
             messages: {},
             execute: async () => {
-                const { userId, ...updates } = req.body
+                const { ...updates } = req.body
+                const { ...userSession } = getUser()
+                const userId = userSession.userId
 
                 const user = await prisma.user.update({
                     where: { userId: Number(userId) },

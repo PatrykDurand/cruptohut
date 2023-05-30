@@ -5,13 +5,13 @@ import { TRoute } from '../../routes/types'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
+import { getUser } from '../../utils/session.utils'
 
 export default {
     method: 'post',
     path: '/api/recipient/add',
     validators: [
         authorize,
-        body('userId').not().isEmpty(),
         body('name').not().isEmpty(),
         body('surname').not().isEmpty(),
         body('accountNumber').not().isEmpty(),
@@ -23,7 +23,9 @@ export default {
             responseSuccessStatus: StatusCodes.OK,
             responseFailStatus: StatusCodes.UNAUTHORIZED,
             execute: async () => {
-                const { userId, name, surname, accountNumber } = req.body
+                const { name, surname, accountNumber } = req.body
+                const { ...userSession } = getUser()
+                const userId = userSession.userId
 
                 const user = await prisma.user.findUnique({
                     where: { userId },
