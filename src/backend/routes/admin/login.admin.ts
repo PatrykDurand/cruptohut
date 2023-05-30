@@ -24,6 +24,7 @@ export default {
                 const user = await prisma.bankAdmin.findFirst({
                     where: { email },
                 })
+                const role = { role: 'admin' }
                 const passwordValid = user
                     ? user.password === passwordHash
                     : false
@@ -34,7 +35,7 @@ export default {
                         isCustomError: true,
                     } as TCustomError
                 return {
-                    token: createToken(user, SECRET, '7d'),
+                    token: createToken({ ...user, ...role }, SECRET, '7d'),
                 }
             },
         }),
