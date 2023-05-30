@@ -10,7 +10,8 @@
   "scripts": {
     "be-dev": "npx nodemon src/backend/index.ts",
     "be-start": "node dist/backend/index.js",
-    "be-build": "tsc -p tsconfig.json"
+    "be-build": "tsc -p tsconfig.json",
+    "test": "mocha --require ts-node/register test/*.test.ts"
   },
   "devDependencies": {
     "@eslint/create-config": "^0.4.2",
@@ -25,8 +26,10 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
+    "mocha": "^10.2.0",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.7",
+    "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
