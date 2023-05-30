@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
-import { TRoute } from '../../routes/types'
+import { TRoute } from '../types'
 import { handleRequest } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
-import {body} from 'express-validator'
+import { body } from 'express-validator'
 
 function generateAccountNumber() {
     return Math.floor(100000000 + Math.random() * 900000000).toString()
@@ -28,11 +28,15 @@ export default {
                 const { userId, accountType } = req.body
 
                 let accountNumber = generateAccountNumber().toString()
-                let existingAccount = await prisma.account.findUnique({ where: { accountNumber } })
+                let existingAccount = await prisma.account.findUnique({
+                    where: { accountNumber },
+                })
 
                 while (existingAccount) {
                     accountNumber = generateAccountNumber().toString()
-                    existingAccount = await prisma.account.findUnique({ where: { accountNumber } })
+                    existingAccount = await prisma.account.findUnique({
+                        where: { accountNumber },
+                    })
                 }
 
                 const account = await prisma.account.create({
@@ -40,25 +44,20 @@ export default {
                         accountNumber,
                         accountType,
                         user: {
-                            connect: { userId }
-                        }
+                            connect: { userId },
+                        },
                     },
                 })
 
                 return await prisma.user.update({
-
-                        where: { userId },
-                        data: {
-                            isVerified: true,
-                        },
+                    where: { userId },
+                    data: {
+                        isVerified: true,
+                    },
                     include: {
                         accounts: true,
-                    }
-
+                    },
                 })
-
             },
-
         }),
-
 } as TRoute

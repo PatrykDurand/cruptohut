@@ -4,6 +4,7 @@ import { prisma } from '../../database'
 import { TRoute } from '../types'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
+import { getUser } from '../../utils/session.utils'
 
 export default {
     method: 'get',
@@ -16,8 +17,8 @@ export default {
             responseSuccessStatus: StatusCodes.OK,
             responseFailStatus: StatusCodes.UNAUTHORIZED,
             execute: async () => {
-                const { userId } = req.body
-
+                const { ...userSession } = getUser()
+                const userId = userSession.userId
                 const user = await prisma.user.findUnique({
                     where: { userId },
                     include: { recipients: true },

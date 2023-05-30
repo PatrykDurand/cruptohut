@@ -1,10 +1,11 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
-import { TRoute } from '../../routes/types'
+import { TRoute } from '../types'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
+import { getUser } from '../../utils/session.utils'
 
 export default {
     method: 'get',
@@ -18,8 +19,16 @@ export default {
             messages: { uniqueConstraintFailed: 'Account not found' },
             execute: async () => {
                 const { accountNumber } = req.body
-                const account = await prisma.account.findUnique({
-                    where: { accountNumber },
+                const { ...userSession } = getUser()
+                const userId = userSession.userId
+                // Find sender's account
+                const account = await prisma.account.findFirst({
+                    where: {
+                        AND: [
+                            { userID: userId },
+                            { accountNumber: accountNumber },
+                        ],
+                    },
                 })
 
                 if (!account) {
@@ -30,7 +39,7 @@ export default {
                     } as TCustomError
                 }
 
-                const transactions = await prisma.transaction.findMany({
+                return await prisma.transaction.findMany({
                     where: {
                         OR: [
                             { senderAccountId: account.accountId },
@@ -38,8 +47,6 @@ export default {
                         ],
                     },
                 })
-
-                return transactions
             },
         }),
 } as TRoute

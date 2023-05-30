@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { body } from 'express-validator'
 import { StatusCodes, ReasonPhrases } from 'http-status-codes'
 import { prisma } from '../../database'
-import { TRoute } from '../../routes/types'
+import { TRoute } from '../types'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { createHash } from '../../utils/hash.utils'
 import { createToken } from '../../utils/jwt.utils'
@@ -24,6 +24,7 @@ export default {
                 const user = await prisma.bankAdmin.findFirst({
                     where: { email },
                 })
+                const role = { role: 'admin' }
                 const passwordValid = user
                     ? user.password === passwordHash
                     : false
@@ -34,7 +35,7 @@ export default {
                         isCustomError: true,
                     } as TCustomError
                 return {
-                    token: createToken(user, SECRET, '7d'),
+                    token: createToken({ ...user, ...role }, SECRET, '7d'),
                 }
             },
         }),

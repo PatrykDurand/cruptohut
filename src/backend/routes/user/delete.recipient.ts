@@ -1,19 +1,16 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
-import { TRoute } from '../../routes/types'
+import { TRoute } from '../types'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
+import { getUser } from '../../utils/session.utils'
 
 export default {
     method: 'delete',
     path: '/api/recipient/delete',
-    validators: [
-        authorize,
-        body('userId').not().isEmpty(),
-        body('recipientId').not().isEmpty(),
-    ],
+    validators: [authorize, body('recipientId').not().isEmpty()],
 
     handler: async (req: Request, res: Response): Promise<void> => {
         await handleRequest({
@@ -22,7 +19,9 @@ export default {
             responseSuccessStatus: StatusCodes.OK,
             responseFailStatus: StatusCodes.UNAUTHORIZED,
             execute: async () => {
-                const { userId, recipientId } = req.body
+                const { recipientId } = req.body
+                const { ...userSession } = getUser()
+                const userId = userSession.userId
 
                 const user = await prisma.user.findUnique({
                     where: { userId },

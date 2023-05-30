@@ -1,10 +1,11 @@
 import { Request, Response } from 'express'
-import { ReasonPhrases, StatusCodes } from 'http-status-codes'
+import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
-import { TRoute } from '../../routes/types'
+import { TRoute } from '../types'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
+import { getUser } from '../../utils/session.utils'
 
 export default {
     method: 'post',
@@ -23,10 +24,16 @@ export default {
             execute: async () => {
                 const { senderAccountNumber, recipientAccountNumber, amount } =
                     req.body
-
+                const { ...userSession } = getUser()
+                const userId = userSession.userId
                 // Find sender's account
-                const senderAccount = await prisma.account.findUnique({
-                    where: { accountNumber: senderAccountNumber },
+                const senderAccount = await prisma.account.findFirst({
+                    where: {
+                        AND: [
+                            { userID: userId },
+                            { accountNumber: senderAccountNumber },
+                        ],
+                    },
                 })
                 if (!senderAccount) {
                     throw {

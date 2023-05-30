@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
 import { body } from 'express-validator'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
-import { TRoute } from '../../routes/types'
+import { TRoute } from '../types'
 import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 
