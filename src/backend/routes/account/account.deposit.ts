@@ -1,17 +1,17 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { prisma } from '../../database'
-import { TRoute } from '../../routes/types'
+import { TRoute } from '../types'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
+import { getUser } from '../../utils/session.utils'
 
 export default {
     method: 'post',
     path: '/api/account/deposit',
     validators: [
         authorize,
-        body('userId').isInt(),
         body('accountNumber').not().isEmpty(),
         body('source').not().isEmpty(),
         body('amount').isDecimal(),
@@ -23,7 +23,9 @@ export default {
             responseSuccessStatus: StatusCodes.OK,
             messages: {},
             execute: async () => {
-                const { userId, accountNumber, source, amount } = req.body
+                const { accountNumber, source, amount } = req.body
+                const { ...userSession } = getUser()
+                const userId = userSession.userId
 
                 const userAccount = await prisma.account.findFirst({
                     where: {

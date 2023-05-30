@@ -5,6 +5,7 @@ import { TRoute } from '../../routes/types'
 import { handleRequest, TCustomError } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
 import { body } from 'express-validator'
+import { getUser } from '../../utils/session.utils'
 
 export default {
     method: 'get',
@@ -18,8 +19,16 @@ export default {
             messages: { uniqueConstraintFailed: 'Account not found' },
             execute: async () => {
                 const { accountNumber } = req.body
-                const account = await prisma.account.findUnique({
-                    where: { accountNumber },
+                const { ...userSession } = getUser()
+                const userId = userSession.userId
+                // Find sender's account
+                const account = await prisma.account.findFirst({
+                    where: {
+                        AND: [
+                            { userID: userId },
+                            { accountNumber: accountNumber },
+                        ],
+                    },
                 })
 
                 if (!account) {
