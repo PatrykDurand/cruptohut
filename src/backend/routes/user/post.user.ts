@@ -11,12 +11,12 @@ export default {
     method: 'post',
     path: '/api/user',
     validators: [
-        body('email').isEmail(),
-        body('password').not().isEmpty(),
-        body('name').not().isEmpty(),
-        body('surname').not().isEmpty(),
-        body('address').not().isEmpty(),
-        body('birthDate').not().isEmpty(),
+        body('email').isEmail().not().isEmpty(),
+        body('password').isStrongPassword().not().isEmpty(),
+        body('name').isString().not().isEmpty(),
+        body('surname').isString().not().isEmpty(),
+        body('address').isString().not().isEmpty(),
+        body('birthDate').isDate().not().isEmpty(),
         body('idCardNumber').not().isEmpty(),
     ],
     handler: async (req: Request, res: Response) =>
